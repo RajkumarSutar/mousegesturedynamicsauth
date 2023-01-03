@@ -9,7 +9,6 @@
   <version>1.0</version>
 
   <name>mousegesturedynamicsauth</name>
-  <!-- FIXME change it to the project's website -->
   <url>http://rajkumarsutar.github.io</url>
 
   <properties>
@@ -19,16 +18,22 @@
   </properties>
 
   <dependencies>
-  	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<!-- https://mvnrepository.com/artifact/com.github.jbytecode/RCaller -->
+	<dependency>
+	    <groupId>com.github.jbytecode</groupId>
+	    <artifactId>RCaller</artifactId>
+	    <version>4.0.2</version>
+	</dependency>
+
+  	<dependency>
+  		<groupId>org.apache.commons</groupId>
+  		<artifactId>commons-math3</artifactId>
+  		<version>3.6.1</version>
+  	</dependency>
 	<dependency>
 	    <groupId>mysql</groupId>
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>8.0.31</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.github.jbytecode</groupId>
-	    <artifactId>RCaller</artifactId>
-	    <version>3.0</version>
 	</dependency>
     <dependency>
       <groupId>junit</groupId>

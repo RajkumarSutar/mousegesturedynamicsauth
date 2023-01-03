@@ -15,10 +15,6 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
-import com.github.rcaller.rstuff.RCaller;
-import com.github.rcaller.rstuff.RCallerOptions;
-import com.github.rcaller.rstuff.RCode;
-
 import io.rajkumarsutar.mousegesturedynamicsauth.database.Database;
 
 /////////////////////////CLASS DEFINITION///////////////////////////////////////
@@ -208,8 +204,7 @@ public class BMApi {
      * @return int[] x- coordinate, y- coordinate, time
      */
     private static int[] centroid(int aRowData[][], String sCluster) {
-            Scanner oScanner = new Scanner(sCluster);
-
+    	try (Scanner oScanner = new Scanner(sCluster)) {
             String t = sCluster;
             int idatapoints = t.replaceAll("[^\\s-]", "").length();
             int iX = 0;
@@ -237,6 +232,7 @@ public class BMApi {
 
                     return aT;
             }
+    	}
     }
 
     /**
@@ -395,8 +391,7 @@ public class BMApi {
      * @param sGestureFileName
      * @return
      */
-    /*
-    public static double[][] smooth(Rengine engine, String sGestureFileName) {
+    public static double[][] smooth(String sGestureFileName) {
             int m = BMCostants.REPLICATIONS;
             int n = BMApi.TEMPLATE_SIZE;
 
@@ -414,7 +409,7 @@ public class BMApi {
                             aT[k] = Gesture.G[j][2];
                     }
 
-                    double[][] aSmoothData = BMApi.WLSR(engine, aX, aY);
+                    double[][] aSmoothData = BMApi.WLSR(aX, aY);
                     int j = 0;
 
                     for (int l = i; l < size; l += n) {
@@ -426,7 +421,7 @@ public class BMApi {
             }
 
             return _G_;
-    }*/
+    }
 
     public static double getY(double X, double array[][]) {
             double d = 0;
@@ -480,6 +475,12 @@ public class BMApi {
      * @return double[][] smoothed X-Y coordinates
      */
     public static double[][] WLSR(double aX[], double aY[]) {
+		return RCallerApi.wlsr(aX, aY);
+    }
+    
+    
+    /*
+    public static double[][] WLSR(Rengine engine, double aX[], double aY[]) {
             double aSmoothedArray[][] = new double[aX.length][2];
 
             String sXVector = "c(";
@@ -492,38 +493,30 @@ public class BMApi {
 
             sXVector = sXVector.substring(0, sXVector.length() - 1) + ")";
             sYVector = sYVector.substring(0, sYVector.length() - 1) + ")";
-            RCode rcode = RCode.create();
-            
-            String code = ""
-            		+ "xVector=" + sXVector
-            		+ "yVector=" + sYVector
-            		+ "aSmoothedArray=lowess(xVector, yVector, 0.8, 3, 0.06)";
-            rcode.addRCode(code);
-            
-            RCaller caller = RCaller.create(rcode, RCallerOptions.create());
-            caller.runAndReturnResult("aSmoothedArray");
-            
-            /*
+
             engine.eval("xVector=" + sXVector);
             engine.eval("yVector=" + sYVector);
             engine.eval("aSmoothedArray=lowess(xVector, yVector, 0.8, 3, 0.06)");
-            
             org.rosuda.JRI.REXP dXval = new org.rosuda.JRI.REXP();
             org.rosuda.JRI.REXP dYval = new org.rosuda.JRI.REXP();
             org.rosuda.JRI.RVector vSmoothedData = (RVector) engine.eval("aSmoothedArray").getContent();
             dXval = (org.rosuda.JRI.REXP) vSmoothedData.get(0);
             dYval = (org.rosuda.JRI.REXP) vSmoothedData.get(1);
-			
+
             double aSX[] = dXval.asDoubleArray();
             double aSY[] = dYval.asDoubleArray();
             for (int i = 0; i < aX.length; i++) {
                     aSmoothedArray[i][0] = aSX[i];
                     aSmoothedArray[i][1] = aSY[i];
             }
-            */
-            aSmoothedArray = caller.getParser().getAsDoubleMatrix("aSmoothedArray");
+
             return aSmoothedArray;
     }
+*/
+    
+    
+    
+    
     /**
      * Extract save features extracted from a Gesture replica
      *
@@ -531,16 +524,15 @@ public class BMApi {
      * @param sUserName
      * @param sGesture
      */
-    @SuppressWarnings("empty-statement")
+
     public static String [] extractFeatures(double[][] aSmoothedData, String sUserName, String sGesture, boolean isValidation) {
             int m = isValidation == true
                     ? 1 : BMCostants.REPLICATIONS;
-            String [] array;
             int n = BMApi.TEMPLATE_SIZE;
             String sFeatureFolderName = "./User/" + sUserName + "/Features/" + sGesture + "/";
             File ofile = new File(sFeatureFolderName);
             ofile.mkdirs();
-            int size = BMCostants.REPLICATIONS * BMApi.TEMPLATE_SIZE;
+            //int size = BMCostants.REPLICATIONS * BMApi.TEMPLATE_SIZE;
 
             for (int i = 0; i < m; i++) {
                 String sFeatureFileName = sFeatureFolderName + (i + 1) + ".txt";
@@ -697,10 +689,11 @@ public class BMApi {
             int iEndIndex = sAllFeatures.indexOf(']', iFeatureIndex);
             String sFeature = sAllFeatures.substring(iFeatureIndex, iEndIndex);
             sFeature = sFeature.replaceAll(",", "  ");
-            Scanner oStringScanner = new Scanner(sFeature);
-            int i = 0;
-            while (oStringScanner.hasNextDouble()) {
-                    dFeatureVector[i++] = oStringScanner.nextDouble();
+            try (Scanner oStringScanner = new Scanner(sFeature)) {
+	            int i = 0;
+	            while (oStringScanner.hasNextDouble()) {
+	                    dFeatureVector[i++] = oStringScanner.nextDouble();
+	            }
             }
             return dFeatureVector;
     }
@@ -807,6 +800,8 @@ public class BMApi {
                     + "AND f.UserID = c.UserID;";
 
             int iUpdatedRows = Database.executeUpdateQuery(sUpdateQuery);
+            
+            System.out.println("Rows updated: " + iUpdatedRows);
         }
 
         return isF1Saved && isF2Saved;
