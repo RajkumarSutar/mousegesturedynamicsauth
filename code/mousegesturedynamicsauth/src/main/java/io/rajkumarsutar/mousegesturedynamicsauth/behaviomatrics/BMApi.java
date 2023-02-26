@@ -863,7 +863,7 @@ public class BMApi {
     	String[] users = Database.userList();
 
     	for(String userID : users) {
-    		for(int i = 1; i <= 2; i++) {
+    		for(int i = 1; i <= 10; i++) {
     			//Fetch replication for user and gesture
     			double[][] smoothedData = BMApi.smooth(userID, i);
     			String features [] = BMApi.extractFeatures(smoothedData, userID, i+"", true);

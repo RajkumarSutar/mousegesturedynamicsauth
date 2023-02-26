@@ -1,6 +1,6 @@
 package io.rajkumarsutar.mousegesturedynamicsauth;
 
-import io.rajkumarsutar.mousegesturedynamicsauth.gui.BehaviourBiometrics;
+import io.rajkumarsutar.mousegesturedynamicsauth.gui.MainFrame;
 
 /**
  * Hello world!
@@ -8,6 +8,6 @@ import io.rajkumarsutar.mousegesturedynamicsauth.gui.BehaviourBiometrics;
  */
 public class MouseGestureDynamicsAuthApp {
     public static void main( String[] args ) {
-    	 BehaviourBiometrics.start();
+    	 MainFrame.startMainFrame();
     }
 }

@@ -4,7 +4,7 @@ public class BMCostants {
 	public static final int REPLICATIONS = 30;
     public static final int TOTAL_SESSION = 1;
     public static final int TRAINING_SESSION = 1;
-	public static final String SAMPLE_GESTURES[] = { "S", "O", "C", "M", "N", "Z", "8", "L", "W", "6" };
+	public static final String SAMPLE_GESTURES[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 	public static final String X = "X-Coordinates";
 	public static final String Y = "Y-Coordinates";
 	public static final String T = "Time";
