@@ -19,14 +19,15 @@ import javax.swing.JOptionPane;
 
 /**
  * This class is used to create a canvas where user can draw fee hand sketches
- * 
- * @author 
+ *
+ * @author
  */
 class ClickGestureWindow extends JComponent{
 
     /////////////////////////Variables Declaration//////////////////////////////
 
-    Image oImage;
+	private static final long serialVersionUID = 6450945343564413543L;
+	Image oImage;
     Graphics2D oGraphics2D;
     int iCurrentX, iCurrentY;
     long lMilliSecs;
@@ -44,21 +45,24 @@ class ClickGestureWindow extends JComponent{
     public ClickGestureWindow(){
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter(){
-        	public void mouseReleased(MouseEvent e)
+        	@Override
+			public void mouseReleased(MouseEvent e)
         	{
         		endX = e.getX();
         		endY = e.getY();
         		endTimer();
         	}
 
-        	public void mousePressed(MouseEvent e)
+        	@Override
+			public void mousePressed(MouseEvent e)
         	{
         		startX = e.getX();
         		startY = e.getY();
         		startTimer();
         	}
 
-        	public void mouseClicked(MouseEvent e)
+        	@Override
+			public void mouseClicked(MouseEvent e)
         	{
         		if(CLICK_MODE == e.getClickCount()  && iPoints < 10) {
         			iCurrentX = e.getX();
@@ -68,9 +72,9 @@ class ClickGestureWindow extends JComponent{
                         FileWriter oFileWriter = new FileWriter(oFile.getName(), true);
                         BufferedWriter oBufferedWriter = new BufferedWriter(oFileWriter);
                         oBufferedWriter.write(
-                                iCurrentX+" "+ 
+                                iCurrentX+" "+
                                 iCurrentY+" "+
-                                (System.currentTimeMillis()-lMilliSecs)+" "+ 
+                                (System.currentTimeMillis()-lMilliSecs)+" "+
                                 (END-START)+" "+
                                 //startX+" "+
                                 //startY+" "+
@@ -79,24 +83,24 @@ class ClickGestureWindow extends JComponent{
                                 "\n"
                         );
                         oBufferedWriter.close();
-                    } 
+                    }
                     catch (IOException ex) {
                         System.err.println(ex.getMessage());
                     }
-        			
+
         			int x = BMCostants.CLICK_POINTS[++iPoints][0];
         	    	int y = BMCostants.CLICK_POINTS[iPoints][1];
         			clearScreen();
         			showNextPoint(x, y);
         		} else {
         			clearScreen();
-                                
-                                String sMessage = ClickDialog.isValidation 
-                                        ? "Please click on Validate!" 
+
+                                String sMessage = ClickDialog.isValidation
+                                        ? "Please click on Validate!"
                                         : "Your session is Completed! Please save and close the Window!";
-                                
+
         			JOptionPane.showMessageDialog(
-        					null, 
+        					null,
         					sMessage,
         					"Behaviometrics",
         					JOptionPane.INFORMATION_MESSAGE
@@ -109,10 +113,11 @@ class ClickGestureWindow extends JComponent{
 
     /**
      * Overrides from JComponent
-     * 
-     * @param g 
+     *
+     * @param g
      */
-    public void paintComponent(Graphics g){
+    @Override
+	public void paintComponent(Graphics g){
         if(oImage == null){
             oImage = createImage(getSize().width, getSize().height);
             oGraphics2D = (Graphics2D)oImage.getGraphics();
@@ -122,10 +127,10 @@ class ClickGestureWindow extends JComponent{
         }
         g.drawImage(oImage, 0, 0, null);
     }
-    
+
     /**
      * This method is used to Create Screen
-     * 
+     *
      */
     public void clearScreen(){
         oGraphics2D.setPaint(Color.white);
@@ -133,10 +138,10 @@ class ClickGestureWindow extends JComponent{
         oGraphics2D.setPaint(Color.black);
         repaint();
     }
-    
+
     /**
      * This method is used to clear the screen along with reset all variables
-     * 
+     *
      */
     public void clear(){
         clearScreen();
@@ -153,7 +158,7 @@ class ClickGestureWindow extends JComponent{
 
     /**
      * This method is used to draw a gesture on screen
-     * 
+     *
      * @param aGestureData int[][]
      */
     public void drawGesture(int i)
@@ -161,12 +166,12 @@ class ClickGestureWindow extends JComponent{
     	CLICK_MODE = i;
     	lMilliSecs    = System.currentTimeMillis();
     	clear();
-    	
+
     	int x = BMCostants.CLICK_POINTS[0][0];
     	int y = BMCostants.CLICK_POINTS[0][1];
-    	
+
     	showNextPoint(x, y);
-        
+
     }
 
     public void showNextPoint(int x, int y) {
@@ -178,17 +183,17 @@ class ClickGestureWindow extends JComponent{
     		oGraphics2D.fillOval(x, y, 5, 5);
     		repaint();
     	}
-             
+
     }
 
     public void startTimer()
     {
     	START = System.currentTimeMillis();
     }
-    
+
     public void endTimer()
     {
     	END = System.currentTimeMillis();
     }
-    
+
 }

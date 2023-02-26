@@ -10,16 +10,12 @@ import static io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.BMApi.dis
 import java.io.File;
 import java.util.Arrays;
 
-/**
- *
- * @author Nilesh Chougule
- */
 public class test {
     //public static final Rengine engine   = new Rengine(new String[] { "--no-save" }, false, null);
 
     public static void main(String args[]) {
 
-        String d ="C:\\Users\\Nilesh Chougule\\Desktop\\Done-20161020T051300Z\\Done\\";
+        String d ="\\";
         File oFolder = new File(d);
         File aFiles[] = oFolder.listFiles();
         for(File  oUserFile : aFiles) {

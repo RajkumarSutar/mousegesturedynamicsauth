@@ -1,21 +1,21 @@
 package io.rajkumarsutar.mousegesturedynamicsauth.gui;
 
 import io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.LVQ2;
+import io.rajkumarsutar.mousegesturedynamicsauth.gui.gesture.creation.GestureCreator;
 
 /**
  * This class is user to display options on starting window
  */
 public class Menu extends javax.swing.JPanel {
 
-    /**
+    private static final long serialVersionUID = 2014789292958450053L;
+	/**
      * Creates new form Menu
      */
     public Menu() {
         initComponents();
     }
 
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jButton2 = new javax.swing.JButton();
@@ -29,7 +29,8 @@ public class Menu extends javax.swing.JPanel {
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton2.setText("Validation");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
@@ -38,7 +39,8 @@ public class Menu extends javax.swing.JPanel {
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton3.setText("Gesture Creation");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
             	jButton3ActionPerformed(evt);
             }
         });
@@ -52,7 +54,8 @@ public class Menu extends javax.swing.JPanel {
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setText("Training");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
@@ -62,7 +65,8 @@ public class Menu extends javax.swing.JPanel {
         jButton4.setForeground(new java.awt.Color(102, 255, 255));
         jButton4.setText("Click Here to Practice");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
@@ -72,7 +76,8 @@ public class Menu extends javax.swing.JPanel {
         jButton6.setForeground(new java.awt.Color(0, 51, 51));
         jButton6.setText("Enrolment");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
@@ -123,7 +128,8 @@ public class Menu extends javax.swing.JPanel {
     	io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.Behaviometrics.startGesture(true);    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.Behaviometrics.startGesture(false);
+        //io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.Behaviometrics.startGesture(false);
+        GestureCreator.startGestureCreator();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -131,11 +137,11 @@ public class Menu extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        Practice.startGestureCreationPractice();   // TODO add your handling code here:
+        Practice.startGestureCreationPractice();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+
         Enrollment.startEnrollment();
     }//GEN-LAST:event_jButton6ActionPerformed
 

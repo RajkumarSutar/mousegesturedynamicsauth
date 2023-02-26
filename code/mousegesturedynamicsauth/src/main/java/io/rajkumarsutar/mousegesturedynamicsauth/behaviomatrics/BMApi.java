@@ -29,9 +29,9 @@ public class BMApi {
     ///////////////////////// Variables
     ///////////////////////// Declaration//////////////////////////////
 
-    static final String LOG_FILE_NAME = "BehaviometricsLog.txt";
-    static final String CLICK_LOG_FILE_NAME = "ClickLogs.txt";
-    static final int TEMPLATE_SIZE = 64;
+    public static final String LOG_FILE_NAME = "BehaviometricsLog.txt";
+    public static final String CLICK_LOG_FILE_NAME = "ClickLogs.txt";
+    public static final int TEMPLATE_SIZE = 64;
 
     ///////////////////////// Constructor
     ///////////////////////// Declaration////////////////////////////
@@ -423,6 +423,39 @@ public class BMApi {
             return _G_;
     }
 
+    public static double[][] smooth(String userID, int gestureID) {
+        int m = BMCostants.REPLICATIONS;
+        int n = BMApi.TEMPLATE_SIZE;
+
+        int size = BMCostants.REPLICATIONS * BMApi.TEMPLATE_SIZE;
+
+        Gesture.initialize(gestureID, userID);
+        double _G_[][] = new double[size][3];
+        for (int i = 0; i < n; i++) {
+                double aX[] = new double[m];
+                double aY[] = new double[m];
+                double aT[] = new double[m];
+                for (int j = i, k = 0; j < size; j += n, k++) {
+                        aX[k] = Gesture.G[j][0];
+                        aY[k] = Gesture.G[j][1];
+                        aT[k] = Gesture.G[j][2];
+                }
+
+                double[][] aSmoothData = BMApi.WLSR(aX, aY);
+                int j = 0;
+
+                for (int l = i; l < size; l += n) {
+                        _G_[l][0] = aX[j];
+                        _G_[l][1] = getY(aX[j], aSmoothData);
+                        _G_[l][2] = aT[j];
+                        j++;
+                }
+        }
+
+        return _G_;
+}
+
+
     public static double getY(double X, double array[][]) {
             double d = 0;
             for (int i = 0; i < BMCostants.REPLICATIONS; i++) {
@@ -477,8 +510,8 @@ public class BMApi {
     public static double[][] WLSR(double aX[], double aY[]) {
 		return RCallerApi.wlsr(aX, aY);
     }
-    
-    
+
+
     /*
     public static double[][] WLSR(Rengine engine, double aX[], double aY[]) {
             double aSmoothedArray[][] = new double[aX.length][2];
@@ -513,18 +546,18 @@ public class BMApi {
             return aSmoothedArray;
     }
 */
-    
-    
-    
-    
-    /**
-     * Extract save features extracted from a Gesture replica
-     *
-     * @param aSmoothedData
-     * @param sUserName
-     * @param sGesture
-     */
 
+
+    /**
+     * This method extracts features from specified input. These features will be used in LVQ training.
+     *
+     * @param aSmoothedData Smoothed User input
+     * @param sUserName     User name
+     * @param sGesture      Gesture Name
+     * @param isValidation  Validation or training
+     *
+     * @return Extracted features for all users and specified gestures
+     */
     public static String [] extractFeatures(double[][] aSmoothedData, String sUserName, String sGesture, boolean isValidation) {
             int m = isValidation == true
                     ? 1 : BMCostants.REPLICATIONS;
@@ -800,13 +833,12 @@ public class BMApi {
                     + "AND f.UserID = c.UserID;";
 
             int iUpdatedRows = Database.executeUpdateQuery(sUpdateQuery);
-            
+
             System.out.println("Rows updated: " + iUpdatedRows);
         }
 
         return isF1Saved && isF2Saved;
     }
-
 
     public static String[] extractClickFeaturesForValidation() {
 
@@ -825,5 +857,18 @@ public class BMApi {
 
         String features[] = {(x + y + t), click_duration};
         return features;
+    }
+
+    public static void smoothDataAndExtractFeatures() {
+    	String[] users = Database.userList();
+
+    	for(String userID : users) {
+    		for(int i = 1; i <= 2; i++) {
+    			//Fetch replication for user and gesture
+    			double[][] smoothedData = BMApi.smooth(userID, i);
+    			String features [] = BMApi.extractFeatures(smoothedData, userID, i+"", true);
+    			System.out.println(features);
+    		}
+    	}
     }
 }

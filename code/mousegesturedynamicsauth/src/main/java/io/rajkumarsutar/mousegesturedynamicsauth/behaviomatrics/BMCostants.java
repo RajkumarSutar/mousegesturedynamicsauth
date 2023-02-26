@@ -1,13 +1,10 @@
 package io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics;
 
-/**
- * @author Prashant Sutar
- */
 public class BMCostants {
 	public static final int REPLICATIONS = 30;
-        public static final int TOTAL_SESSION = 1;
-        public static final int TRAINING_SESSION = 1;
-	public static final String SAMPLE_GESTURES[] = { "G", "Y", "M", "Z", "5" };
+    public static final int TOTAL_SESSION = 1;
+    public static final int TRAINING_SESSION = 1;
+	public static final String SAMPLE_GESTURES[] = { "S", "O", "C", "M", "N", "Z", "8", "L", "W", "6" };
 	public static final String X = "X-Coordinates";
 	public static final String Y = "Y-Coordinates";
 	public static final String T = "Time";
@@ -92,7 +89,7 @@ public class BMCostants {
 			{ 2.683, 2.422, 2.258, 2.137, 2.039, 1.960, 1.890, 1.829, 1.774 },
 			{ 2.690, 2.430, 2.265, 2.143, 2.046, 1.967, 1.897, 1.836, 1.781 } };
 
-	public static final int CLICK_POINTS[][] = { 
+	public static final int CLICK_POINTS[][] = {
 			{ 602, 125 }, { 506, 75 },  { 201, 149 }, { 187, 172 }, { 172, 211 }, { 157, 253 },
 			{ 152, 290 }, { 152, 332 }, { 155, 370 }, { 592, 455 }, { 617, 349 }, { 616, 302 }};
 

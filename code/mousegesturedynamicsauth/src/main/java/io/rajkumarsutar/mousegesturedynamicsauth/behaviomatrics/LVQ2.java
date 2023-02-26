@@ -14,24 +14,19 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Scanner;
+
 import javax.swing.JOptionPane;
 
-/**
- * 
- */
-public class LVQ2 
-{
-    
+public class LVQ2 {
+
 	public static final double LEARNING_RATE = 0.5;
 
 	/**
 	 * This method is used to find the euclidean distance between two vectors
-	 * 
-	 * @param x
-	 *            double[] Input vector
-	 * @param w
-	 *            double[] Weight vector
-	 * 
+	 *
+	 * @param x double[] Input vector
+	 * @param w double[] Weight vector
+	 *
 	 * @return double Distance between x and w
 	 */
 	public static double euclideanDistance(double x[], double w[]) {
@@ -56,8 +51,8 @@ public class LVQ2
 		String weights = "";
 		try {
 			Connection connection = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getConnection();
-			PreparedStatement statement = 
-                            connection.prepareStatement("SELECT Weights FROM Weights WHERE Category = ? AND ModuleID = ? AND Gesture = ?");
+			PreparedStatement statement = connection.prepareStatement(
+					"SELECT Weights FROM Weights WHERE Category = ? AND ModuleID = ? AND Gesture = ?");
 			statement.setInt(1, catagory);
 			statement.setString(2, module);
 			statement.setString(3, sGesture);
@@ -65,8 +60,8 @@ public class LVQ2
 			if (resultSet.next()) {
 				weights = resultSet.getString("Weights");
 			}
-                        connection.close();
-                        
+			connection.close();
+
 			Scanner scanner = new Scanner(weights);
 			for (int i = 0; i < size; i++) {
 				weightVector[i] = scanner.nextDouble();
@@ -93,9 +88,9 @@ public class LVQ2
 			preparedStatement.setString(3, module);
 			preparedStatement.setString(4, sGesture);
 			index = preparedStatement.executeUpdate();
-                        connection.close();
+			connection.close();
 		} catch (SQLException ex) {
-                        BMApi.logError(Calendar.getInstance().getTime().toString(), ex);
+			BMApi.logError(Calendar.getInstance().getTime().toString(), ex);
 		}
 		return index > 0;
 	}
@@ -109,7 +104,7 @@ public class LVQ2
 			while (resultSet.next()) {
 				categories.add(resultSet.getInt("Category"));
 			}
-                        connection.close();
+			connection.close();
 		} catch (SQLException ex) {
 			BMApi.logError(Calendar.getInstance().getTime().toString(), ex);
 		}
@@ -153,17 +148,13 @@ public class LVQ2
 
 	/**
 	 * This method is used in training of the neural network
-	 * 
-	 * @param input
-	 *            array
-	 * @param catagoryOfInput
-	 *            int
-	 * @param sModuleName
-	 *            String
-         * @param sGesture
+	 *
+	 * @param input           array
+	 * @param catagoryOfInput int
+	 * @param sModuleName     String
+	 * @param sGesture
 	 */
 	public static void lvq2Training(double[] input, int catagoryOfInput, String sModuleName, String sGesture) {
-
 		ArrayList<Integer> categories = getAllCatagories();
 		double y_w[] = null;
 		double y_r[] = null;
@@ -197,10 +188,9 @@ public class LVQ2
 
 			log(y_w, bWinnerStored ? "UPDATED" : "FAILED", winnerCatagoryDetected);
 			log(y_r, bRunnerStored ? "UPDATED" : "FAILED", runnerCatagoryDetected);
+		} else {
+			log(y_w, "NO ACTION", winnerCatagoryDetected);
 		}
-                else {
-                    log(y_w, "NO ACTION", winnerCatagoryDetected);
-                }
 	}
 
 	public static boolean checkUpdateCondition(double dw, double dr, double E) {
@@ -216,166 +206,178 @@ public class LVQ2
 		return current;
 	}
 
-        /**
-         * This method used to initialize the codebook vectors of per user , per gesture, per module
-         * 
-         * @param sUserID
-         * @param sModule
-         * @param sGesture 
-         * @return  
-         */
-        public static boolean initialiseCodebookVector(String sUserID, String sModule, String sGesture) {
-        
-            System.out.println(sModule);
-            double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getFeatureData(sUserID, sModule, sGesture);
-            double d[] = null;
-            int length = 0;
-            for (double[] aFeatureData1 : aFeatureData) {
-                if(d == null) {
-                    length = aFeatureData1.length;
-                    d = new double[length];
-                }
-                for(int i=0; i<length; i++) {
-                    d[i] += aFeatureData1[i];
-                }
-            }
-            
-            for(int i=0; i<length; i++) {
-                d[i] /= aFeatureData.length;
-            }
-            
-            String initialWeightOfCodebookVector = BMApi.arrayToString(d);
-            int iUserCataogy = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getCatagoryByMobile(sUserID);
-            boolean b = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.storeUserProfile(iUserCataogy, initialWeightOfCodebookVector, sModule, sGesture);
-            
-            return b;
-        }
+	/**
+	 * This method used to initialize the codebook vectors of per user , per
+	 * gesture, per module
+	 *
+	 * @param sUserID
+	 * @param sModule
+	 * @param sGesture
+	 * @return
+	 */
+	public static boolean initialiseCodebookVector(String sUserID, String sModule, String sGesture) {
 
-        public static void initializeUserProfiles() {
-            String aUsers[] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.userList();
-            for(String sUser : aUsers) {
-                for(String sGesture : BMCostants.SAMPLE_GESTURES) {
-                    for(String sModuleName : BMCostants.MODULES) {
-                        initialiseCodebookVector(sUser, sModuleName, sGesture);
-                    }
-                }
-            }
-        }
+		System.out.println(sModule);
+		double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getFeatureData(sUserID,
+				sModule, sGesture);
+		double d[] = null;
+		int length = 0;
+		for (double[] aFeatureData1 : aFeatureData) {
+			if (d == null) {
+				length = aFeatureData1.length;
+				d = new double[length];
+			}
+			for (int i = 0; i < length; i++) {
+				d[i] += aFeatureData1[i];
+			}
+		}
 
-        public static void level1Training() {
-            String aUsers[] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.userList();
-            for(String sUser : aUsers) {
-                for(String sGesture : BMCostants.SAMPLE_GESTURES) {
-                    for(String sModuleName : BMCostants.MODULES) {
-                        double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getFeatureData(sUser, sModuleName, sGesture);
-                        double d[] = null;
-                        double d1[] = BMApi.averageArray(aFeatureData[0], aFeatureData[1], aFeatureData[2], aFeatureData[3], aFeatureData[4]);
-                        double d2[] = BMApi.averageArray(aFeatureData[5], aFeatureData[6], aFeatureData[7], aFeatureData[8], aFeatureData[9]);
-                        double d3[] = BMApi.averageArray(aFeatureData[10], aFeatureData[11], aFeatureData[12], aFeatureData[13], aFeatureData[14]);
-                        double d4[] = BMApi.averageArray(aFeatureData[15], aFeatureData[16], aFeatureData[17], aFeatureData[18], aFeatureData[19]);
-                        double d5[] = BMApi.averageArray(aFeatureData[20], aFeatureData[21], aFeatureData[22], aFeatureData[23], aFeatureData[24]);
-                        double d6[] = BMApi.averageArray(aFeatureData[25], aFeatureData[26], aFeatureData[27], aFeatureData[28], aFeatureData[29]);
-                        int iUserCataogy = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getCatagoryByMobile(sUser);
-                        
-                        lvq2Training(d1, iUserCataogy, sModuleName, sGesture);
-                        lvq2Training(d2, iUserCataogy, sModuleName, sGesture);
-                        lvq2Training(d3, iUserCataogy, sModuleName, sGesture);
-                        lvq2Training(d4, iUserCataogy, sModuleName, sGesture);
-                        lvq2Training(d5, iUserCataogy, sModuleName, sGesture);
-                        lvq2Training(d6, iUserCataogy, sModuleName, sGesture);                        
-                    }
-                }
-            }
-        }
+		for (int i = 0; i < length; i++) {
+			d[i] /= aFeatureData.length;
+		}
 
-        public static void level2Training() {
-            String aUsers[] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.userList();
-            for(String sUser : aUsers) {
-                for(String sGesture : BMCostants.SAMPLE_GESTURES) {
-                    for(String sModuleName : BMCostants.MODULES) {
-                        double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getFeatureData(sUser, sModuleName, sGesture);
-                        int iUserCataogy = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getCatagoryByMobile(sUser);
+		String initialWeightOfCodebookVector = BMApi.arrayToString(d);
+		int iUserCataogy = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getCatagoryByMobile(sUserID);
+		boolean b = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.storeUserProfile(iUserCataogy,
+				initialWeightOfCodebookVector, sModule, sGesture);
 
-                        for(double [] aFeatureData1 : aFeatureData) {
-                        
-                        lvq2Training(aFeatureData1, iUserCataogy, sModuleName, sGesture);
-                            
-                        }
-                  }
-                }
-            }
-            
-        }
+		return b;
+	}
 
-        public static void heirarchicalTraining() {
-            System.out.println("start initialize user profiles");
-            initializeUserProfiles();
-            System.out.println("Start L1 training");
-            level1Training();
-            System.out.println("Start L2 Training");
+	public static void initializeUserProfiles() {
+		String aUsers[] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.userList();
+		for (String sUser : aUsers) {
+			for (String sGesture : BMCostants.SAMPLE_GESTURES) {
+				for (String sModuleName : BMCostants.MODULES) {
+					initialiseCodebookVector(sUser, sModuleName, sGesture);
+				}
+			}
+		}
+	}
 
-            level2Training();
-            System.out.println("Finish training");
+	public static void level1Training() {
+		String aUsers[] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.userList();
+		for (String sUser : aUsers) {
+			for (String sGesture : BMCostants.SAMPLE_GESTURES) {
+				for (String sModuleName : BMCostants.MODULES) {
+					double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database
+							.getFeatureData(sUser, sModuleName, sGesture);
+					double d[] = null;
+					double d1[] = BMApi.averageArray(aFeatureData[0], aFeatureData[1], aFeatureData[2], aFeatureData[3],
+							aFeatureData[4]);
+					double d2[] = BMApi.averageArray(aFeatureData[5], aFeatureData[6], aFeatureData[7], aFeatureData[8],
+							aFeatureData[9]);
+					double d3[] = BMApi.averageArray(aFeatureData[10], aFeatureData[11], aFeatureData[12],
+							aFeatureData[13], aFeatureData[14]);
+					double d4[] = BMApi.averageArray(aFeatureData[15], aFeatureData[16], aFeatureData[17],
+							aFeatureData[18], aFeatureData[19]);
+					double d5[] = BMApi.averageArray(aFeatureData[20], aFeatureData[21], aFeatureData[22],
+							aFeatureData[23], aFeatureData[24]);
+					double d6[] = BMApi.averageArray(aFeatureData[25], aFeatureData[26], aFeatureData[27],
+							aFeatureData[28], aFeatureData[29]);
+					int iUserCataogy = io.rajkumarsutar.mousegesturedynamicsauth.database.Database
+							.getCatagoryByMobile(sUser);
 
-            
-            JOptionPane.showMessageDialog(null, "Training Completed", "Behaviometrics", JOptionPane.INFORMATION_MESSAGE);
-        }
+					lvq2Training(d1, iUserCataogy, sModuleName, sGesture);
+					lvq2Training(d2, iUserCataogy, sModuleName, sGesture);
+					lvq2Training(d3, iUserCataogy, sModuleName, sGesture);
+					lvq2Training(d4, iUserCataogy, sModuleName, sGesture);
+					lvq2Training(d5, iUserCataogy, sModuleName, sGesture);
+					lvq2Training(d6, iUserCataogy, sModuleName, sGesture);
+				}
+			}
+		}
+	}
 
-        public static int validation(String fs[], String sGesture) {
-            int i = 0;
-            int categoryDetected[] = new int[5];
-            for(String s : fs) {
-                double d[] = BMApi.stringToArray(s);
-                int iCatagoryDetected = lvq2Validation(d, "FS" + (++i), sGesture);
-                categoryDetected[i] = iCatagoryDetected;
-            }
-            return detectCategory(categoryDetected);
-        }
+	public static void level2Training() {
+		String aUsers[] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.userList();
+		for (String sUser : aUsers) {
+			for (String sGesture : BMCostants.SAMPLE_GESTURES) {
+				for (String sModuleName : BMCostants.MODULES) {
+					double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database
+							.getFeatureData(sUser, sModuleName, sGesture);
+					int iUserCataogy = io.rajkumarsutar.mousegesturedynamicsauth.database.Database
+							.getCatagoryByMobile(sUser);
 
-        public static int detectCategory(int detectCategory[]) {
-            int category = -1;
-            HashMap<Integer, Integer> oHashMap = new HashMap<Integer, Integer>();
+					for (double[] aFeatureData1 : aFeatureData) {
 
-            for(int i = 1; i<detectCategory.length; i++) {
-                if(oHashMap.get(detectCategory[i])!=null) {
-                    int c = oHashMap.get(detectCategory[i]);
-                    oHashMap.put(detectCategory[i], c+1);
-                } else {
-                    oHashMap.put(detectCategory[i], 1);
-                }
-            }
+						lvq2Training(aFeatureData1, iUserCataogy, sModuleName, sGesture);
 
-            int maxCount = -1;
+					}
+				}
+			}
+		}
 
-            for(int i : oHashMap.keySet())
-            {
-                int value = oHashMap.get(i);
-                if(value > maxCount) {
-                    maxCount = value;
-                    category = i;
-                }
-            }
+	}
 
-            return maxCount >= BMCostants.THRESHOLD ? category : -1;
-        }
+	public static void heirarchicalTraining() {
+		System.out.println("start data outlier removal");
+		BMApi.smoothDataAndExtractFeatures();
+		System.out.println("start initialize user profiles");
+		initializeUserProfiles();
+		System.out.println("Start L1 training");
+		level1Training();
+		System.out.println("Start L2 Training");
 
+		level2Training();
+		System.out.println("Finish training");
 
-        public static int lvq2Validation(double[] input, String sModuleName, String sGesture) {
+		JOptionPane.showMessageDialog(null, "Training Completed", "Behaviometrics", JOptionPane.INFORMATION_MESSAGE);
+	}
 
-            ArrayList<Integer> categories = getAllCatagories();
-            int winnerCatagoryDetected = -1;
+	public static int validation(String fs[], String sGesture) {
+		int i = 0;
+		int categoryDetected[] = new int[5];
+		for (String s : fs) {
+			double d[] = BMApi.stringToArray(s);
+			int iCatagoryDetected = lvq2Validation(d, "FS" + (++i), sGesture);
+			categoryDetected[i] = iCatagoryDetected;
+		}
+		return detectCategory(categoryDetected);
+	}
 
-            double winnerMin = 99999999999999999999999d;
+	public static int detectCategory(int detectCategory[]) {
+		int category = -1;
+		HashMap<Integer, Integer> oHashMap = new HashMap<Integer, Integer>();
 
-            for (Integer categorie : categories) {
-                    double wj[] = fetchWeightVector(categorie, sModuleName, sGesture);
-                    double dist = euclideanDistance(input, wj);
-                    if (dist < winnerMin) {
-                            winnerMin = dist;
-                            winnerCatagoryDetected = categorie;
-                    }
-            }
+		for (int i = 1; i < detectCategory.length; i++) {
+			if (oHashMap.get(detectCategory[i]) != null) {
+				int c = oHashMap.get(detectCategory[i]);
+				oHashMap.put(detectCategory[i], c + 1);
+			} else {
+				oHashMap.put(detectCategory[i], 1);
+			}
+		}
 
-            return winnerCatagoryDetected;
-        }
+		int maxCount = -1;
+
+		for (int i : oHashMap.keySet()) {
+			int value = oHashMap.get(i);
+			if (value > maxCount) {
+				maxCount = value;
+				category = i;
+			}
+		}
+
+		return maxCount >= BMCostants.THRESHOLD ? category : -1;
+	}
+
+	public static int lvq2Validation(double[] input, String sModuleName, String sGesture) {
+
+		ArrayList<Integer> categories = getAllCatagories();
+		int winnerCatagoryDetected = -1;
+
+		double winnerMin = 99999999999999999999999d;
+
+		for (Integer categorie : categories) {
+			double wj[] = fetchWeightVector(categorie, sModuleName, sGesture);
+			double dist = euclideanDistance(input, wj);
+			if (dist < winnerMin) {
+				winnerMin = dist;
+				winnerCatagoryDetected = categorie;
+			}
+		}
+
+		return winnerCatagoryDetected;
+	}
 }
