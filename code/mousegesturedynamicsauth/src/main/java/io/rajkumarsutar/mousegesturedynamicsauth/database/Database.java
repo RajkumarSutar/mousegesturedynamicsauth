@@ -21,10 +21,10 @@ public class Database {
 	public static Connection getConnection() {
 		Connection oDBConnection = null;
 		String sJdbcDriver = "com.mysql.jdbc.Driver";
-		String sDBUser = "root";
-		String sDBPassword = "root";
+		String sDBUser = "admin";
+		String sDBPassword = "admin";
 		String sDBName = "behaviometrics";
-		String sDBUrl = "jdbc:mysql://localhost/" + sDBName;
+		String sDBUrl = "jdbc:mysql://localhost:3306/" + sDBName;
 		try {
 			Class.forName(sJdbcDriver);
 			oDBConnection = DriverManager.getConnection(sDBUrl, sDBUser, sDBPassword);

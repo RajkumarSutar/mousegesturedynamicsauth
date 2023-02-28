@@ -120,7 +120,7 @@ public class MainFrame extends JFrame {
 		btnValidation.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.Behaviometrics.startGesture(true);
+				io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.ValidationFrame.startGesture(true);
 			}
 		});
 		btnValidation.setForeground(Color.LIGHT_GRAY);

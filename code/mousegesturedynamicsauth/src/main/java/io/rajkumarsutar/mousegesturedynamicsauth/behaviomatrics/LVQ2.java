@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -161,8 +162,8 @@ public class LVQ2 {
 		int winnerCatagoryDetected = -1;
 		int runnerCatagoryDetected = -1;
 
-		double winnerMin = 99999999999999999999999d;
-		double runnerMin = 99999999999999999999999d;
+		double winnerMin = Double.MAX_VALUE;
+		double runnerMin = Double.MAX_VALUE;
 
 		for (Integer categorie : categories) {
 			double wj[] = fetchWeightVector(categorie, sModuleName, sGesture);
@@ -364,10 +365,10 @@ public class LVQ2 {
 
 	public static int lvq2Validation(double[] input, String sModuleName, String sGesture) {
 
-		ArrayList<Integer> categories = getAllCatagories();
+		List<Integer> categories = getAllCatagories();
 		int winnerCatagoryDetected = -1;
 
-		double winnerMin = 99999999999999999999999d;
+		double winnerMin = Double.MAX_VALUE;
 
 		for (Integer categorie : categories) {
 			double wj[] = fetchWeightVector(categorie, sModuleName, sGesture);

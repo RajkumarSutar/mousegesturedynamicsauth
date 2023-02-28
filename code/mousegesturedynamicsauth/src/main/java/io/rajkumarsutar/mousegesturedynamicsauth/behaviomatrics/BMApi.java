@@ -127,7 +127,7 @@ public class BMApi {
                                     int iX1 = aRowData[j][0];
                                     int iY1 = aRowData[j][1];
                                     int iClusterNumber = 0;
-                                    double dDistance = 999999999999999999999999999999999999999d;
+                                    double dDistance = Long.MAX_VALUE;
                                     for (int i = 0; i <= iTotalClusters; i++) {
                                             int iX2 = aCentriods[i][0];
                                             int iY2 = aCentriods[i][1];
@@ -867,7 +867,7 @@ public class BMApi {
     			//Fetch replication for user and gesture
     			double[][] smoothedData = BMApi.smooth(userID, i);
     			String features [] = BMApi.extractFeatures(smoothedData, userID, i+"", true);
-    			System.out.println(features);
+    			System.out.println("User: " + userID + "\nGesture ID: " + i + "\nData:\n" + Arrays.toString(features) + "\n\n");
     		}
     	}
     }
