@@ -72,7 +72,7 @@ public class ValidationFrame {
         if (!oTempFile.exists()) {
             oTempFile.mkdirs();
         }
-        sUserFolderName += (System.currentTimeMillis()+".log");
+
         panel.add(saveButton);
         panel.add(replication);
 
@@ -139,7 +139,7 @@ public class ValidationFrame {
         });
 
         content.add(panel, BorderLayout.WEST);
-        oFrame.setSize(1000, 600);
+        oFrame.setSize(1200, 563);
         oFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         oFrame.setVisible(true);
     }

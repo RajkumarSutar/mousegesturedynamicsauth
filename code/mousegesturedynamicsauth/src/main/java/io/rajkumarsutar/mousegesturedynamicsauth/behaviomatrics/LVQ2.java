@@ -162,8 +162,8 @@ public class LVQ2 {
 		int winnerCatagoryDetected = -1;
 		int runnerCatagoryDetected = -1;
 
-		double winnerMin = Double.MAX_VALUE;
-		double runnerMin = Double.MAX_VALUE;
+		double winnerMin = 99999999999999999999999d;
+		double runnerMin = 99999999999999999999999d;
 
 		for (Integer categorie : categories) {
 			double wj[] = fetchWeightVector(categorie, sModuleName, sGesture);
@@ -334,6 +334,7 @@ public class LVQ2 {
 			int iCatagoryDetected = lvq2Validation(d, "FS" + (++i), sGesture);
 			categoryDetected[i] = iCatagoryDetected;
 		}
+
 		return detectCategory(categoryDetected);
 	}
 
@@ -368,7 +369,7 @@ public class LVQ2 {
 		List<Integer> categories = getAllCatagories();
 		int winnerCatagoryDetected = -1;
 
-		double winnerMin = Double.MAX_VALUE;
+		double winnerMin = 99999999999999999999999d;
 
 		for (Integer categorie : categories) {
 			double wj[] = fetchWeightVector(categorie, sModuleName, sGesture);
