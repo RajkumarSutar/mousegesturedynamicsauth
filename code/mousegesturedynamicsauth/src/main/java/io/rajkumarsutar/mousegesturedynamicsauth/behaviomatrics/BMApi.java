@@ -867,6 +867,12 @@ public class BMApi {
     			//Fetch replication for user and gesture
     			double[][] smoothedData = BMApi.smooth(userID, i);
     			String features [] = BMApi.extractFeatures(smoothedData, userID, i+"", true);
+
+    			for(int j = 0; j < features.length; j++) {
+    				Database.storeFeatureSet(userID, features[j], Behaviometrics.SessionID, "FS" + (j + 1), i+"");
+    			}
+
+
     			System.out.println("User: " + userID + "\nGesture ID: " + i + "\nData:\n" + Arrays.toString(features) + "\n\n");
     		}
     	}

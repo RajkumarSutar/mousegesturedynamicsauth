@@ -1,9 +1,26 @@
 package io.rajkumarsutar.mousegesturedynamicsauth.gui;
 
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import io.rajkumarsutar.mousegesturedynamicsauth.behaviomatrics.BMCostants;
 
@@ -24,8 +41,8 @@ public class Practice{
 
     /**
      * Main method
-     * 
-     * @param args 
+     *
+     * @param args
      */
     public static void startGestureCreationPractice(){
 
@@ -36,27 +53,27 @@ public class Practice{
         Container content = oFrame.getContentPane();
         content.setLayout(new BorderLayout());
         final PracticeGestureWindow oPracticeGestureWindow = new PracticeGestureWindow();
-        content.add(oPracticeGestureWindow, BorderLayout.CENTER);  
-        
+        content.add(oPracticeGestureWindow, BorderLayout.CENTER);
+
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(50, 68));
         panel.setMinimumSize(new Dimension(32, 68));
         panel.setMaximumSize(new Dimension(32, 68));
-        
+
         final JButton clearButton      = new JButton("Clear");
         final JButton createGestures   = new JButton("draw");
         final JButton saveButton       = new JButton("Save");
         final JLabel replication       = new JLabel("");
-        
+
         clearButton.setBackground(Color.ORANGE);
         saveButton.setBackground(Color.CYAN);
         replication.setBackground(Color.LIGHT_GRAY);
-        
+
         panel.add(clearButton);
         panel.add(createGestures);
         panel.add(saveButton);
         panel.add(replication);
-        
+
         clearButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -64,7 +81,7 @@ public class Practice{
                 oPracticeGestureWindow.clear();
             }
         });
-        
+
         saveButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -73,7 +90,7 @@ public class Practice{
                 clearButton.setEnabled(true);
 
 
- 
+
                 replication.setText(iReplicationNumber + "");
 
                 if(iReplicationNumber == BMCostants.REPLICATIONS){
@@ -81,14 +98,14 @@ public class Practice{
                     iReplicationNumber = 1;
                     if(iNextGesture < BMCostants.SAMPLE_GESTURES.length) {
                         JOptionPane.showMessageDialog(
-                            null, 
+                            null,
                             "Please draw Next Gesture : '" + BMCostants.SAMPLE_GESTURES[iNextGesture++] + "'",
                             "Behaviometrics" ,
                             JOptionPane.INFORMATION_MESSAGE
                         );
                     } else {
                     	JOptionPane.showMessageDialog(
-                    		null, 
+                    		null,
                             "Now you will redirected to CLICK-PHASE",
                             "Behaviometrics" ,
                             JOptionPane.INFORMATION_MESSAGE
@@ -103,7 +120,7 @@ public class Practice{
                 else{
                     oPracticeGestureWindow.clear();
                     JOptionPane.showMessageDialog(
-                        null, 
+                        null,
                         "Gesture Size is less than template size!",
                         "Behaviometrics" ,
                         JOptionPane.INFORMATION_MESSAGE
@@ -111,15 +128,15 @@ public class Practice{
                 }
             }
         });
-        
-        
+
+
         createGestures.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 if(iReplicationNumber == 1) {
                     JOptionPane.showMessageDialog(
-                    null, 
+                    null,
                     "Please draw Next Gesture : '" + BMCostants.SAMPLE_GESTURES[iNextGesture++],
                     "Behaviometrics" ,
                     JOptionPane.INFORMATION_MESSAGE
@@ -131,7 +148,7 @@ public class Practice{
 
             }
         });
-        
+
         content.add(panel, BorderLayout.WEST);
         oFrame.setSize(1000,600);
         oFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -147,16 +164,18 @@ public class Practice{
 class PracticeGestureWindow extends JComponent{
 
     /////////////////////////Variables Declaration//////////////////////////////
-    
+
+    private static final long serialVersionUID = 7605618995020552477L;
+
     Image oImage;
     Graphics2D oGraphics2D;
     int iCurrentX, iCurrentY, iOldX, iOldY;
     long lMilliSecs;
     int iPoints = 0;
     int iMaxX, iMinX, iMaxY, iMinY;
-    
+
     /////////////////////////Constructor Declaration////////////////////////////
-    
+
     public PracticeGestureWindow(){
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter(){
@@ -184,9 +203,9 @@ class PracticeGestureWindow extends JComponent{
                 iMaxY = iCurrentY;
             if(iCurrentY < iMinY)
                 iMinY = iCurrentY;
-            
+
             iPoints++;
-            
+
             if(oGraphics2D != null)
             oGraphics2D.drawLine(iOldX, iOldY, iCurrentX, iCurrentY);
             repaint();
@@ -195,11 +214,11 @@ class PracticeGestureWindow extends JComponent{
         }
         });
     }
-    
+
     /**
      * Overrides from JComponent
-     * 
-     * @param g 
+     *
+     * @param g
      */
     @Override
     public void paintComponent(Graphics g){
@@ -212,10 +231,10 @@ class PracticeGestureWindow extends JComponent{
         }
         g.drawImage(oImage, 0, 0, null);
     }
-    
+
     /**
      * This method is used to Create Screen
-     * 
+     *
      */
     public void clearScreen(){
         oGraphics2D.setPaint(Color.white);
@@ -223,10 +242,10 @@ class PracticeGestureWindow extends JComponent{
         oGraphics2D.setPaint(Color.black);
         repaint();
     }
-    
+
     /**
      * This method is used to clear the screen along with reset all variables
-     * 
+     *
      */
     public void clear(){
         clearScreen();

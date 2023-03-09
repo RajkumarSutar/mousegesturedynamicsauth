@@ -67,12 +67,6 @@ public class GestureCreator extends JFrame {
 
 	private String sessionID;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		startGestureCreator();
-	}
 
 	public static void startGestureCreator() {
 		EventQueue.invokeLater(new Runnable() {

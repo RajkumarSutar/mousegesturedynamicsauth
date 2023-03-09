@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -50,6 +51,7 @@ public class LVQ2 {
 		int size = sizeOfFeatureSet(module);
 		double[] weightVector = new double[size];
 		String weights = "";
+		Scanner scanner = null;
 		try {
 			Connection connection = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getConnection();
 			PreparedStatement statement = connection.prepareStatement(
@@ -63,12 +65,16 @@ public class LVQ2 {
 			}
 			connection.close();
 
-			Scanner scanner = new Scanner(weights);
+			scanner = new Scanner(weights);
 			for (int i = 0; i < size; i++) {
 				weightVector[i] = scanner.nextDouble();
 			}
 		} catch (SQLException ex) {
 			BMApi.logError(Calendar.getInstance().getTime().toString(), ex);
+		} finally {
+			if(Objects.nonNull(scanner)) {
+				scanner.close();
+			}
 		}
 
 		return weightVector;
@@ -96,9 +102,9 @@ public class LVQ2 {
 		return index > 0;
 	}
 
-	public static ArrayList getAllCatagories() {
+	public static List<Integer> getAllCatagories() {
 		Connection connection = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getConnection();
-		ArrayList<Integer> categories = new ArrayList();
+		List<Integer> categories = new ArrayList<>();
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery("SELECT DISTINCT Category FROM Weights");
@@ -117,10 +123,10 @@ public class LVQ2 {
 		int size = 1;
 		switch (choice) {
 		case 1:
-			size = BMApi.TEMPLATE_SIZE * 3 + 30;
+			size = BMApi.TEMPLATE_SIZE * 3;
 			break;
 		case 2:
-			size = BMApi.TEMPLATE_SIZE * 3 + 10;
+			size = BMApi.TEMPLATE_SIZE * 3;
 			break;
 		case 3:
 			size = BMApi.TEMPLATE_SIZE * 5;
@@ -156,7 +162,7 @@ public class LVQ2 {
 	 * @param sGesture
 	 */
 	public static void lvq2Training(double[] input, int catagoryOfInput, String sModuleName, String sGesture) {
-		ArrayList<Integer> categories = getAllCatagories();
+		List<Integer> categories = getAllCatagories();
 		double y_w[] = null;
 		double y_r[] = null;
 		int winnerCatagoryDetected = -1;
@@ -217,8 +223,8 @@ public class LVQ2 {
 	 * @return
 	 */
 	public static boolean initialiseCodebookVector(String sUserID, String sModule, String sGesture) {
-
-		System.out.println(sModule);
+		String msg = "Initializing code book vector for user= %s | module= %s | gesture= %s";
+		System.out.println(String.format(msg, sUserID, sModule, sGesture));
 		double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database.getFeatureData(sUserID,
 				sModule, sGesture);
 		double d[] = null;
@@ -263,7 +269,6 @@ public class LVQ2 {
 				for (String sModuleName : BMCostants.MODULES) {
 					double aFeatureData[][] = io.rajkumarsutar.mousegesturedynamicsauth.database.Database
 							.getFeatureData(sUser, sModuleName, sGesture);
-					double d[] = null;
 					double d1[] = BMApi.averageArray(aFeatureData[0], aFeatureData[1], aFeatureData[2], aFeatureData[3],
 							aFeatureData[4]);
 					double d2[] = BMApi.averageArray(aFeatureData[5], aFeatureData[6], aFeatureData[7], aFeatureData[8],

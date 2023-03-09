@@ -28,10 +28,6 @@ public class ValidationFrame {
     public static String sUserFolderName = "";
     public static String sGesture = "";
 
-    public static void main(String[] args) {
-        startGesture(false);
-    }
-
     /**
      * Main method
      *
@@ -124,7 +120,7 @@ public class ValidationFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Random r = new Random();
-                int g = r.nextInt(BMCostants.SAMPLE_GESTURES.length);
+                int g = 1;//r.nextInt(BMCostants.SAMPLE_GESTURES.length);
 
                 JOptionPane.showMessageDialog(null,
                         "Please draw Next Gesture : '" + BMCostants.SAMPLE_GESTURE_NAMES[g] + "'", "Behaviometrics",

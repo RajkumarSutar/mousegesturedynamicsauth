@@ -37,9 +37,6 @@ public class Behaviometrics{
 
    // public static final Rengine engine   = new Rengine(new String[] { "--no-save" }, false, null);
 
-    public static void main(String[] args) {
-        startGesture(false);
-    }
 
     /**
      * Main method
